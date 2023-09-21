@@ -1,37 +1,64 @@
-var nbrsDeJoueur = "";
-var nbrsDeCarte = "";
+var nbrsDeJoueurs = "";
+var nbrsDePaires = "";
 var nbrsDeMauvaiseTentative = "";
 var tempsTentative = "";
 var carte = [];
 var partieEnCours = false;
-var joueurActuel = 1;   
+var joueurActuel = 1;
 
+const arrayCarte = [1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10];
+
+const imagesCarte = {
+    1: "images/1.png",
+    2: "images/2.png",
+    3: "images/3.png",
+    4: "images/4.png",
+    5: "images/5.png",
+    6: "images/6.png",
+    7: "images/7.png",
+    8: "images/8.png",
+    9: "images/9.png",
+    10: "images/10.png"
+};
 
 function randomCard() {
-    return Math.floor(Math.random() * 10) + 1;
+    return Math.floor(Math.random() * arrayCarte.length);
 }
-console.log(randomCard());
 
 function distribuerCarte() {
-    for (let i = 0; i < nbrsDeCarte; i++) {
-        carte.push(randomCard());
-    } {
-        carte.push(randomCard());
+    for (let i = 0; i < nbrsDePaires; i++) {
+        const index = randomCard();
+        const carteValeur = arrayCarte.splice(index, 1)[0];
+        carte.push(carteValeur);
+        carte.push(carteValeur);
     }
-    console.log(carte);
 }
+
 function afficherJoueurActuel() {
     document.getElementById('joueurActuel').innerHTML = "Joueur " + joueurActuel;
 }
-let partieEnCours = false;
-let joueurActuel = 1;
+init
 
-function démarrer() {
-    if (!partieEnCours) {
-        partieEnCours = true;
-        console.log("Début de la partie");
-        // Ajoutez ici la logique pour initialiser la partie
+const nombreJoueursSelect = document.getElementById("nombreJoueurs");
+const nombreDePairesSelect = document.getElementById("nombreDePaires");
+const startButton = document.getElementById("start");
+
+function activerDemarrerButton() {
+    if (nombreJoueursSelect.value !== "0" && nombreDePairesSelect.value !== "0") {
+        startButton.disabled = false;
+    } else {
+        startButton.disabled = true;
     }
+}
+
+nombreJoueursSelect.addEventListener("change", activerDemarrerButton);
+nombreDePairesSelect.addEventListener("change", activerDemarrerButton);
+
+function démarrer()
+{   
+
+
+    
     afficherJoueurActuel();
 }
 
@@ -50,34 +77,50 @@ cartes.forEach(carte => {
     });
 });
 
-function passerAuJoueurSuivant() { joueurActuel = (joueurActuel % nbrsDeJoueur) +1;
-    afficherJoueurActuel();}
+function passerAuJoueurSuivant() {
+    joueurActuel = (joueurActuel % nbrsDeJoueurs) + 1;
+    afficherJoueurActuel();
+}
 
-    function init() {
-        nbrsDeJoueur = document.getElementById("nombreJoueurs").value;
-        nbrsDeCarte = document.getElementById("nombreCartes").value;
-        nbrsDeMauvaiseTentative = prompt("Combien de mauvaise tentative ?");
-        tempsTentative = prompt("Combien de temps pour la tentative ?");
-        distribuerCarte(); afficherJoueurActuel();
+function init() {
+    nbrsDeJoueurs = document.getElementById("nombreJoueurs").value;
+    nbrsDePaires = document.getElementById("nombreDePaires").value;
+    nbrsDeMauvaiseTentative = prompt("Combien de mauvaise tentative ?");
+    tempsTentative = prompt("Combien de temps pour la tentative ?");
+    distribuerCarte();
+    afficherJoueurActuel();
+}
+
+grille = document.getElementById("grille");
+temp = document.querySelector("template");
+
+document.getElementById("nombreDePaires").addEventListener("change", function () {
+    nbrsDePaires = document.getElementById("nombreDePaires").value;
+    resetGrille();
+});
+
+function resetGrille() {
+    grille.innerHTML = "";
+    for (let i = 0; i < nbrsDePaires; i++) {
+        const element = temp.content.cloneNode(true);
+        element.querySelector('.verso').classList.remove('verso');
+        element.querySelector('.verso').classList.add('carte');
+
+        const carteValeur = carte[i];
+        const cheminImage = imagesCarte[carteValeur];
+        const imgElement = document.createElement("img");
+        imgElement.setAttribute("src", cheminImage);
+
+        element.querySelector('.carte').appendChild(imgElement);
+
+        grille.appendChild(element);
     }
-    init();
+}
 
-    grille = document.getElementById("carte");
+init();
 
-    temp = document.querySelector("template");
 
-    document.getElementById("nombreCartes").addEventListener("change", function () {
-        nbrsDeCarte = document.getElementById("nombreCartes").value;
-        resetGrille();
-    });
-    function resetGrille() {
-        grille.innerHTML = "";
-        for (let i = 0; i < nbrsDeCarte; i++) {
-            const element3 = temp.content.cloneNode(true); // on clone le template
-            grille.appendChild(element3);
-        }   // on ajoute la ligne à la grille
-        grille.innerHTML = grille.innerHTML.replaceAll("verso", "carte");
-    }
+
 
 
 
@@ -99,4 +142,4 @@ function passerAuJoueurSuivant() { joueurActuel = (joueurActuel % nbrsDeJoueur) 
 // for (let i = 0; i < nbrsDeCarte; i++) {
 //     const element3 = temp.content.cloneNode(true); // on clone le template
 //     grille.appendChild(element3); }   // on ajoute la ligne à la grille
-//     grille.innerHTML = grille.innerHTML.replaceAll("verso", "carte");
+//     grille.innerHTML = grille.innerHTML.replaceAll("verso");
